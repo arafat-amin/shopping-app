@@ -1,10 +1,19 @@
 <script setup lang="ts">
+import { useCartStore } from '@/stores/cart';
 import type { Product } from '@/services/products'
 import { products } from '@/services/products'
 
+const cartStore = useCartStore();
+
 const addToCart = (product: Product) => {
-  alert(`Added ${product.name} to cart!`)
-}
+  cartStore.addItem({
+    id: product.id,
+    name: product.name,
+    price: product.price,
+    quantity: 1,
+  });
+  alert(`${product.name} added to cart!`);
+};
 </script>
 
 <template>
