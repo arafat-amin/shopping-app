@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router';
-import type { Product } from '@/services/products';
+
+import type { Product } from '@/services/products'
 import { products } from '@/services/products';
 
 const route = useRoute();

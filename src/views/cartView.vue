@@ -33,4 +33,3 @@ const removeItem = (id: number) => {
     </div>
   </div>
 </template>
-
