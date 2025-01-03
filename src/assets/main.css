@@ -36,3 +36,11 @@ a,
     padding: 0 2rem;
   }
 }
+
+.spinner-border {
+  border: 2px solid transparent;
+  border-top: 2px solid white;
+  border-radius: 50%;
+  width: 1rem;
+  height: 1rem;
+}

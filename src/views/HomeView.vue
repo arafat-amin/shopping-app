@@ -3,18 +3,22 @@ import { ref } from 'vue'
 import { useCartStore } from '@/stores/cart'
 import { products, Product } from '@/services/products'
 
+const isLoading = ref(false)
 const cartStore = useCartStore()
 
 const activePopup = ref(false) // Reactive variable for popup visibility
 const popupProduct = ref<Product | null>(null) // To hold the product being added
 
-const addToCart = (product: Product) => {
+const addToCart = async (product: Product) => {
+  isLoading.value = true // Start loading
+  await new Promise((resolve) => setTimeout(resolve, 500)) // Simulate delay
   cartStore.addItem({
     id: product.id,
     name: product.name,
     price: product.price,
     quantity: 1,
   })
+  isLoading.value = false
 
   // Set the popup data
   popupProduct.value = product
@@ -37,23 +41,29 @@ const addToCart = (product: Product) => {
 <template>
   <div class="container mx-auto py-8">
     <h1 class="text-3xl text-green-500 font-bold text-center mb-6">Product Listing</h1>
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
       <div
         v-for="product in products"
         :key="product.id"
-        class="border rounded-lg p-4 shadow hover:shadow-lg transition"
+        class="border rounded-lg p-4 shadow hover:shadow-lg transition bg-gray-100"
       >
         <router-link :to="`/product/${product.id}`" class="block">
-          <img :src="product.image" alt="Product Image" class="w-full h-40 object-cover" />
+          <img
+            :src="product.image"
+            alt="Product Image"
+            class="w-full h-40 object-cover rounded-md"
+          />
         </router-link>
 
-        <h2 class="text-xl text-white font-semibold mt-2">{{ product.name }}</h2>
-        <p class="text-lg font-bold mt-1 text-white-800">${{ product.price }}</p>
+        <h2 class="text-xl text-gray-800 font-semibold mt-2">{{ product.name }}</h2>
+        <p class="text-sm text-gray-600">${{ product.description }}</p>
+        <p class="text-lg font-bold mt-1 text-blue-600">${{ product.price }}</p>
         <button
           class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
           @click="addToCart(product)"
         >
-          Add to Cart
+          <span v-if="isLoading" class="spinner-border animate-spin"></span>
+          <span v-else>Add to Cart</span>
         </button>
       </div>
     </div>
@@ -105,6 +115,9 @@ const addToCart = (product: Product) => {
               <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
                 <h3 class="text-base font-semibold text-gray-900" id="modal-title">
                   {{ popupProduct?.name }}
+                  <span class="text-green-500 text-sm block">
+                    was added successfully to the cart
+                  </span>
                 </h3>
                 <div class="mt-2">
                   <p class="text-sm text-gray-500">
